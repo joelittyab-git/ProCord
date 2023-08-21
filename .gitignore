@@ -1,3 +1,4 @@
 client/node_modules
 server/__venv
 server/__config/credentials.py
+**/__pycache__/
