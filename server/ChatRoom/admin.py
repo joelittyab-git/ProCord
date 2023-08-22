@@ -1,3 +1,15 @@
 from django.contrib import admin
+from . models import (
+     Room,
+     RoomMembership,
+     Message,
+)
 
-# Register your models here.
+# model registration
+admin.site.register(
+     [
+          Room,
+          RoomMembership,
+          Message
+     ]
+)
