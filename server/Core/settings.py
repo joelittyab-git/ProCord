@@ -37,6 +37,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    
+    "daphne",
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,8 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'rest_framework',
+    'channels',
+    'channels_postgres',
     
-    "ChatRoom"
+    "ChatRoom",
+    
 ]
 
 MIDDLEWARE = [
@@ -78,6 +84,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Core.wsgi.application'
+ASGI_APPLICATION = 'Core.asgi.application'
 
 
 # Database
@@ -91,7 +98,16 @@ DATABASES = {
         'HOST':f"{DefaultDatabase.HOST}",
         'USER':f'{DefaultDatabase.USER}',
         'PASSWORD':F'{DefaultDatabase.PASSWORD}'
-    }
+    },
+    'channels_postgres': {
+		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': f'{ChannelLayerDatabase.NAME}',
+		'USER': f'{ChannelLayerDatabase.USER}',
+		'PASSWORD': f'{ChannelLayerDatabase.PASSWORD}',
+		'HOST': f'{ChannelLayerDatabase.HOST}',
+		'PORT': f'{ChannelLayerDatabase.PORT}',
+	}
+    
 }
 
 
