@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate
 '''
 -----------------------------------------------------------------------------------------Authentication-View-------------------------------------------------------------------------------------------------
 **URL["/user/auth/"] => returns the authentication token and credentials if valid 
-     :request:{"usernam":... , "password":...}(POST)
+     :request:{"username":... , "password":...}(POST)
      :response:
           {"auth_status":"success","auth_data":{"auth_token":"Token ..."}}} -> authentication status successfull
           {"auth_status":"exception""info":{...}}} -> database integrity error / other exceptions
@@ -51,6 +51,27 @@ class AuthenticationView(APIView):
                auth_token = Token.objects.create(user = user_authenticated)
                return Response({"auth_status":"success", "auth_data":{"auth_token":f"Token {auth_token}"}})
           return Response({"auth_status":"denied"})
+     
+
+
+'''
+-----------------------------------------------------------------------------------------RegistrationView-View-------------------------------------------------------------------------------------------------
+**URL["/user/register/"] => registers user to the database 
+     :request:{"username":... , "password":..., "email":..., "first_name":..., "last_name":..., }(POST)
+     :response:
+          {"auth_status":"success","auth_data":{"auth_token":"Token ..."}}} -> authentication status successfull
+          {"auth_status":"exception""info":{...}}} -> database integrity error / other exceptions
+          {"auth_status":"denied"} -> authentication failed, onvalid credentials provided
+          
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+'''     
+class RegistrationView(APIView):
+     permission_classes = [
+          AllowAny
+     ]
+     
+     def post(self, request, *args, **kwargs):
+          pass
 
           
      

@@ -2,17 +2,17 @@ from django.db import models
 from django.contrib.auth.models import User
 
 '''
-------------------------------------------------------------------------------Friendship-model[through]-------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------Profile-model-------------------------------------------------------------------------------------------------
 [user]:OneToOneField -> points to the user of a particular profile
 [friend_list]:ManyToManyField -> points to the user(:User) of the friendship (Many Friendship -> single User)
--------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 '''
 class Profile(models.Model):
      user = models.OneToOneField(
           User,
           on_delete=models.CASCADE
-     )
-     
+     )     
+     telephone = models.BigIntegerField(default=0)     
      friend_list = models.ManyToManyField("self", through="Friendship")
      
      
