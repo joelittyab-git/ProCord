@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'channels',
     'channels_postgres',
     
+    "User",
     "ChatRoom",
     
 ]
