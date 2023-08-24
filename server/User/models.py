@@ -15,6 +15,8 @@ class Profile(models.Model):
      telephone = models.BigIntegerField(default=0)     
      friend_list = models.ManyToManyField("self", through="Friendship")
      
+     def __str__(self) -> str:
+          return f"{self.user.username}'s profile"
      
 '''
 ------------------------------------------------------------------------------Friendship-model[through]-------------------------------------------------------------------------------------------------

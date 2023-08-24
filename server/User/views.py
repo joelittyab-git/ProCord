@@ -4,6 +4,10 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from django.http import HttpRequest
 from django.contrib.auth import authenticate
+from .validation import (
+     ValidateRegistration,
+     Register
+)
 
 
 '''
@@ -30,7 +34,15 @@ class AuthenticationView(APIView):
                username = request.data.get("username")
                password = request.data.get("password")
           except Exception as e:
-               return Response({"auth_status":"exception", "info":{str(e)}})
+               return Response(
+                    {
+                         "auth_status":"exception",
+                         "info":{
+                              str(e)
+                         }
+                    }
+               )
+               
           
           # deletion of pre-authenticated user
           if(request.user.is_authenticated):
@@ -49,7 +61,15 @@ class AuthenticationView(APIView):
           if(user_authenticated is not None):
                # generatin authentication token for authentciated user
                auth_token = Token.objects.create(user = user_authenticated)
-               return Response({"auth_status":"success", "auth_data":{"auth_token":f"Token {auth_token}"}})
+               return Response(
+                    {
+                         "auth_status":"success",
+                         "auth_data":{
+                              "auth_token":f"Token {auth_token}"
+                         }
+                    }
+               )
+               
           return Response({"auth_status":"denied"})
      
 
@@ -57,11 +77,11 @@ class AuthenticationView(APIView):
 '''
 -----------------------------------------------------------------------------------------RegistrationView-View-------------------------------------------------------------------------------------------------
 **URL["/user/register/"] => registers user to the database 
-     :request:{"username":... , "password":..., "email":..., "first_name":..., "last_name":..., }(POST)
+     :request:{"username":... , "password":..., "email":..., "first_name":..., "last_name":...,"telephone":...,  }(POST)
      :response:
-          {"auth_status":"success","auth_data":{"auth_token":"Token ..."}}} -> authentication status successfull
-          {"auth_status":"exception""info":{...}}} -> database integrity error / other exceptions
-          {"auth_status":"denied"} -> authentication failed, onvalid credentials provided
+          {"status":"success"} -> registration status successfull
+          {"status":"exception""info":{...}}} -> database integrity error / other exceptions
+          {"status":"denied","validation_data":{..."valid"/"invalid"}} ->  invalid user credentials, returns validation data whcih indicates the validity of the credentials
           
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 '''     
@@ -70,8 +90,43 @@ class RegistrationView(APIView):
           AllowAny
      ]
      
-     def post(self, request, *args, **kwargs):
-          pass
+     def post(self, request:HttpRequest, *args, **kwargs):
+          # extracting request data
+          try:
+               username = request.data.get("username")
+               password = request.data.get("password")
+               email = request.data.get("email")
+               first_name = request.data.get("first_name")
+               last_name = request.data.get("last_name")
+               telephone = request.data.get("telephone")
+          except Exception as e:
+               return Response(
+                    {
+                         "status":"exception",
+                         "info":{
+                              str(e)
+                         }
+                    }
+               )
+               
+          user_instance, validation_data = ValidateRegistration.validate(
+               username = username,
+               password = password,
+               email = email,
+               first_name = first_name,
+               last_name = last_name,
+               telephone = telephone
+          )
+          
+          try:
+               registration_status = Register.commit_registration(user_instance)
+          except Exception as e:
+               return Response({"status":"exception", "info":{str(e)}})
+          
+          if(registration_status is True):
+               return Response({"status":"success"})
+          return Response({"status": "denied","validation_data":validation_data})
 
+          
           
      

@@ -11,5 +11,6 @@ from . import views
                     {"auth_status":"denied"} -> authentication failed, onvalid credentials provided
 '''
 urlpatterns = [
-    path("auth/", views.AuthenticationView.as_view())   
+    path("auth/", views.AuthenticationView.as_view()),
+    path("register/", views.RegistrationView.as_view())   
 ]
