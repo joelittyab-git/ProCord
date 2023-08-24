@@ -8,11 +8,12 @@ from .validation import (
      ValidateRegistration,
      Register
 )
+from rest_framework import status
 
 
 '''
 -----------------------------------------------------------------------------------------Authentication-View-------------------------------------------------------------------------------------------------
-**URL["/user/auth/"] => returns the authentication token and credentials if valid 
+**URL["/server/user/auth/"] => returns the authentication token and credentials if valid 
      :request:{"username":... , "password":...}(POST)
      :response:
           {"auth_status":"success","auth_data":{"auth_token":"Token ..."}}} -> authentication status successfull
@@ -72,15 +73,21 @@ class AuthenticationView(APIView):
                
           return Response({"auth_status":"denied"})
      
+     
+     def get(self, request:HttpRequest,*args, **kwargs):
+          # to be implement
+          return Response(status=status.HTTP_200_OK)
+          
+     
 
 
 '''
 -----------------------------------------------------------------------------------------RegistrationView-View-------------------------------------------------------------------------------------------------
-**URL["/user/register/"] => registers user to the database 
+**URL["/server/user/register/"] => registers user to the database 
      :request:{"username":... , "password":..., "email":..., "first_name":..., "last_name":...,"telephone":...,  }(POST)
      :response:
           {"status":"success"} -> registration status successfull
-          {"status":"exception""info":{...}}} -> database integrity error / other exceptions
+          {"status":"exception","info":{...}}} -> database integrity error / other exceptions
           {"status":"denied","validation_data":{..."valid"/"invalid"}} ->  invalid user credentials, returns validation data whcih indicates the validity of the credentials
           
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
