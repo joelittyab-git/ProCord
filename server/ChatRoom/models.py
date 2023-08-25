@@ -31,6 +31,10 @@ class Room(models.Model):
      )
      created_at = models.DateTimeField(auto_now_add=True)
      
+     
+     def __str__(self) -> str:
+          return f"{self.name}"
+     
 
 '''
 ------------------------------------------------------------------------------RoomMembership-model[through]-------------------------------------------------------------------------------------------------
@@ -51,6 +55,9 @@ class RoomMembership(models.Model):
           on_delete=models.CASCADE
      )
      joined_at = models.DateTimeField(auto_now_add=True)
+     
+     def __str__(self) -> str:
+          return f"{self.user.username} - {self.room.name}"
  
 
 '''
