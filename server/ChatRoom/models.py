@@ -1,4 +1,7 @@
 from django.db import models
+
+# Create your models here.
+from django.db import models
 from django.contrib.auth.models import User
 
 '''
@@ -27,7 +30,8 @@ class Room(models.Model):
           related_name="participants"
      )
      messages = models.ManyToManyField(
-          to="Message"
+          through="MessageReference",
+          to='Message'
      )
      created_at = models.DateTimeField(auto_now_add=True)
      
@@ -76,3 +80,24 @@ class Message(models.Model):
           on_delete=models.DO_NOTHING
      )
      posted_at = models.DateTimeField(auto_now_add=True)
+     
+     class Meta:
+          ordering = ['-posted_at']
+  
+'''
+------------------------------------------------------------------------------MessageReference-model[through]-------------------------------------------------------------------------------------------------
+[reference_id]:IntegerField -> stores the primary key of the particular reference
+[room]:ForeignKey -> points to the room(:Room) of the refernce (Many MessageReference -> single Room)
+[message]:ForeignKey -> points to the message of the reference (Many MessageReference -> single User)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+'''          
+class MessageReference(models.Model):
+     reference_id = models.BigAutoField(primary_key=True)
+     message = models.ForeignKey(
+          to=Message,
+          on_delete=models.CASCADE
+     )
+     room = models.ForeignKey(
+          to=Room,
+          on_delete=models.CASCADE
+     )

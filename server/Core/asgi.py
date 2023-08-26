@@ -12,7 +12,7 @@ from channels.routing import (
 )
 from channels.auth import AuthMiddlewareStack
 import os
-from ChatRoom.webscoket_router import websocket_urlpatterns
+from ChatRoom.websocket_router import websocket_urlpatterns
 
 from django.core.asgi import get_asgi_application
 

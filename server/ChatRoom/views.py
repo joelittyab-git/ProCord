@@ -1,3 +1,6 @@
+from django.shortcuts import render
+
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -9,7 +12,8 @@ from .models import(
 )
 from .serializers import (
      RoomMembershipModelSerializer,
-     RoomModelSerializer
+     RoomModelSerializer,
+     MessageModelSerializer
 )
 
 '''
@@ -128,7 +132,6 @@ class RoomManagerView(APIView):
           
           # extracting request data
           user = request.user
-          
           room = Room.objects.filter(room_id=room_id)
           
           # checking if the room with this number exists
@@ -138,15 +141,20 @@ class RoomManagerView(APIView):
           room = Room.objects.get(room_id=room_id)
           membership = RoomMembership.objects.filter(user=user, room__room_id = room_id)
           if(
-               not room.admin is user or 
-               not membership.exists()
+               not ((room.admin.pk == user.pk) or 
+               (membership.exists()))
           ):
+               print(room.admin.pk == user.pk)
+               print(user)
                return Response({"action":"redirect"})
           
-          print(room.messages)
+          # querying messages from the room model and serializing it
+          messages = room.messages
+          message_serialized = MessageModelSerializer(messages, many = True)
           
+
           
-          return Response({"data":room_id})
+          return Response({"action":"display", "messages":message_serialized.data})
           
      
      

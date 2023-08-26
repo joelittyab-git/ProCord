@@ -3,6 +3,7 @@ from . models import (
      Room,
      RoomMembership,
      Message,
+     MessageReference
 )
 
 # model registration
@@ -10,6 +11,7 @@ admin.site.register(
      [
           Room,
           RoomMembership,
-          Message
+          Message,
+          MessageReference
      ]
 )
