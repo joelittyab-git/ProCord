@@ -3,7 +3,9 @@ import json
 from asgiref.sync import async_to_sync, sync_to_async
 from .models import(
    Room,
-   RoomMembership
+   RoomMembership,
+   MessageReference,
+   Message
 )
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -52,9 +54,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
       # extracting data from params
       data = json.loads(text_data)
       message = data['message']
+      user = self.scope["user"]
       
+      await(
+         self.commit_message_to_db(
+            str(message),
+            str(user),
+            self.group_name
+         )
+      )
       
-      await (self.channel_layer.group_send(
+      await(
+         self.channel_layer.group_send(
             self.group_name,
             {
                "type":"chat.message",
@@ -89,3 +100,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
          filter(room_id = room,admin__username = user).
          exists()
       )
+   
+   @sync_to_async
+   def commit_message_to_db(
+      self,
+      content:str,
+      posted_by_username:str,
+      room_id:int
+   ):
+      try:
+         msg = Message.objects.create(
+            content = content,
+            posted_by__username = posted_by_username
+         )
+         msg.save()
+         
+         MessageReference.objects.create(
+            message = msg,
+            room = room_id
+         ).save()
+         
+      except Exception as e:
+         pass
