@@ -1,7 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import( 
+     AllowAny,
+     IsAuthenticated
+)
+from rest_framework.parsers import (
+     JSONParser,
+     FileUploadParser,
+     FormParser,
+     MultiPartParser
+)
+                                       
 from django.http import HttpRequest
 from django.contrib.auth import authenticate
 from .validation import (
@@ -134,6 +144,32 @@ class RegistrationView(APIView):
                return Response({"status":"success"})
           return Response({"status": "denied","validation_data":validation_data})
 
+
+'''
+-----------------------------------------------------------------------------------------ProfileManager-View-------------------------------------------------------------------------------------------------
+**URL["/server/user/register/"](POST) => edits user profile to the database
+     :request:{"email":..., "first_name":..., "last_name":...,"telephone":...}
+               :file:
+     :response:
+          {"status":"success"} -> registration status successfull
+          {"status":"exception","info":{...}}} -> database integrity error / other exceptions
+          {"status":"denied","validation_data":{..."valid"/"invalid"}} ->  invalid user credentials, returns validation data whcih indicates the validity of the credentials
           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+'''
+class ProfileManagerView(APIView):
+     permission_classes = [
+          IsAuthenticated
+     ]
+     
+     parser_classes = [
+          JSONParser,
+          FileUploadParser,
+          FormParser,
+          MultiPartParser
+     ]
+          
+     def post(self , requet, *args, **kwargs):
+          pass
           
      

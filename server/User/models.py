@@ -8,12 +8,15 @@ from django.contrib.auth.models import User
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 '''
 class Profile(models.Model):
+     profile_picture_media_root = "user/pictures"
+     
      user = models.OneToOneField(
           User,
           on_delete=models.CASCADE
      )     
      telephone = models.BigIntegerField(default=0)     
      friend_list = models.ManyToManyField("self", through="Friendship")
+     image = models.ImageField(upload_to=profile_picture_media_root, blank=True)
      
      def __str__(self) -> str:
           return f"{self.user.username}'s profile"

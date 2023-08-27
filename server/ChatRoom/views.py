@@ -152,8 +152,6 @@ class RoomManagerView(APIView):
           messages = room.messages
           message_serialized = MessageModelSerializer(messages, many = True)
           
-
-          
           return Response({"action":"display", "messages":message_serialized.data})
           
      

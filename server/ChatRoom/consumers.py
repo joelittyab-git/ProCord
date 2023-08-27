@@ -1,18 +1,91 @@
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+from asgiref.sync import async_to_sync, sync_to_async
+from .models import(
+   Room,
+   RoomMembership
+)
 
-class ChatConsumer(WebsocketConsumer):
-   def connect(self):
-      self.accept()
+class ChatConsumer(AsyncWebsocketConsumer):
+   async def connect(self):
+      
+      await self.accept()
+      # extracting user from header
+      user = (self.scope["user"])
+      
+      # extracting data from url
+      room_id = int(self.scope["url_route"]["kwargs"]["room_id"])
+      
+      # authorizing user membership
+      is_member = await (self.is_room_member(room_id, str(user)))
+      is_admin = await (self.is_room_admin(room_id, str(user)))
+   
+      if(
+         not (
+            is_admin or is_member
+         )
+      ):
+         await self.send(json.dumps({"authorization":"denied"}))
+         self.disconnect()
+   
+      self.group_name = str(room_id)
+      await self.send(json.dumps({"authorization":"success"}))
+      
+      await (self.channel_layer.group_add)(
+         self.group_name,
+         self.channel_name
+      )
+      
 
 
-   def disconnect(self, close_code):
-      pass
+   async def disconnect(self, close_code):
+      try:
+         print("disconnecting")
+         await self.channel_layer.group_discard(
+               self.room_group_name,
+               self.channel_name
+         )
+      except Exception:
+         pass
 
-   def receive(self, text_data):
+   async def receive(self, text_data):
+      # extracting data from params
       data = json.loads(text_data)
       message = data['message']
       
-      self.send(text_data=json.dumps({
-         'message': f"You said: {message}"
-      }))
+      
+      await (self.channel_layer.group_send(
+            self.group_name,
+            {
+               "type":"chat.message",
+               "message":message
+            }
+         )
+      )
+      
+
+   async def chat_message(self, event):
+      message = event["message"]
+      
+      await self.send(
+         json.dumps({"message":message})
+      )
+      
+
+   @sync_to_async
+   def is_room_member(self,room:int, user:str):
+      return  (
+         RoomMembership.
+         objects.
+         filter(room__room_id = int(room), user__username = user)
+         .exists()
+      )
+   
+   @sync_to_async
+   def is_room_admin(self, room:int, user:str):
+      return(
+         Room.
+         objects.
+         filter(room_id = room,admin__username = user).
+         exists()
+      )

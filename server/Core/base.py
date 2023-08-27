@@ -9,6 +9,7 @@ class BaseConfiguration:
                'rest_framework.permissions.AllowAny'
           ],
           'DEFAULT_AUTHENTICATION_CLASSES': [
-               'Core.apiconfig.TokenAuth',
+               'Core.base.TokenAuth',
           ]
      }
+     

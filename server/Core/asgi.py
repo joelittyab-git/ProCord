@@ -13,6 +13,7 @@ from channels.routing import (
 from channels.auth import AuthMiddlewareStack
 import os
 from ChatRoom.websocket_router import websocket_urlpatterns
+from Middlewares.auth import WebsocketAuthenticationMiddleware
 
 from django.core.asgi import get_asgi_application
 
@@ -21,7 +22,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Core.settings')
 application = ProtocolTypeRouter(
      {
           "http":get_asgi_application(),
-          'websocket':AuthMiddlewareStack(
+          'websocket':WebsocketAuthenticationMiddleware(
                URLRouter(
                     websocket_urlpatterns
                )

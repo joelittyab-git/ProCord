@@ -18,7 +18,7 @@ from __config.credentials import (
     ChannelLayerDatabase
 )
 
-from Core.apiconfig import BaseConfiguration
+from Core.base import BaseConfiguration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,6 +119,20 @@ DATABASES = {
     
 }
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_postgres.core.PostgresChannelLayer',
+        'CONFIG': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': f'{ChannelLayerDatabase.NAME}',
+            'USER': f'{ChannelLayerDatabase.USER}',
+            'PASSWORD': f'{ChannelLayerDatabase.PASSWORD}',
+            'HOST': f'{ChannelLayerDatabase.HOST}',
+            'PORT': f'{ChannelLayerDatabase.PORT}',
+
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -155,6 +169,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
