@@ -77,7 +77,8 @@ class Message(models.Model):
      content = models.TextField(max_length=500)
      posted_by = models.ForeignKey(
           to=User,
-          on_delete=models.DO_NOTHING
+          on_delete=models.SET_NULL,
+          null=True
      )
      posted_at = models.DateTimeField(auto_now_add=True)
      
