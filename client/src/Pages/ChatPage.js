@@ -2,12 +2,14 @@ import React from 'react';
 import client from './../Configurations/Client';
 import { ChatNavigation } from '../Components/WestNavigation/ChatNavigation';
 import './Stylesheets/ChatPage.css';
+import GroupList from '../Components/GroupList/GroupList';
 function ChatPage() {
   return (
     <div className='min-h-screen grid bg-slate-950'>
-      <div class="relative h-32 w-32 ...">
+      <div className="fixed top-0 left-0 h-screen flex ">
         <ChatNavigation/>
-      </div> 
+        <GroupList/>
+      </div>
     </div>
   )
 }
