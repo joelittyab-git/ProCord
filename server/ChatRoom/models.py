@@ -75,6 +75,7 @@ class RoomMembership(models.Model):
 class Message(models.Model):
      message_id = models.BigAutoField(primary_key=True)
      content = models.TextField(max_length=500)
+     image = models.ImageField(upload_to='uploads/chat', null=True, default=None)
      posted_by = models.ForeignKey(
           to=User,
           on_delete=models.SET_NULL,

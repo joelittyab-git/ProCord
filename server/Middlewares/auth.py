@@ -3,7 +3,7 @@ from rest_framework.authtoken.models import Token
 from asgiref.sync import sync_to_async
 
 '''
-Authentication middle for web scoket protocol
+Authentication middleware for web scoket protocol
 '''
 class WebsocketAuthenticationMiddleware(BaseMiddleware):
      def __init__(self, inner):
