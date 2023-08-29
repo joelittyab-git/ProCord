@@ -76,7 +76,7 @@ class RoomRegistrationView(APIView):
      def get(self, request:HttpRequest, *args, **kwargs):
           user = request.user
           
-          # filtering from datbase, the rooms for whcih the logged in user is an admin of
+          # filtering from datbase, the rooms for which the logged in user is an admin of
           rooms_admin = Room.objects.filter(admin = user)
           serialized_a = RoomModelSerializer(
                rooms_admin,
@@ -144,8 +144,6 @@ class RoomManagerView(APIView):
                not ((room.admin.pk == user.pk) or 
                (membership.exists()))
           ):
-               print(room.admin.pk == user.pk)
-               print(user)
                return Response({"action":"redirect"})
           
           # querying messages from the room model and serializing it
