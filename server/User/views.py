@@ -153,7 +153,7 @@ class RegistrationView(APIView):
      :response:
           {"status":"success"} -> registration status successfull
           {"status":"exception","info":{...}}} -> database integrity error / other exceptions
-          {"status":"denied","validation_data":{..."valid"/"invalid"}} ->  invalid user credentials, returns validation data whcih indicates the validity of the credentials
+          {"status":"denied","validation_data":{..."valid"/"invalid"}} ->  invalid user credentials, returns validation data which indicates the validity of the credentials
           
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 '''
