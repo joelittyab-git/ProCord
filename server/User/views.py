@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from django.db import IntegrityError
 from rest_framework.permissions import( 
      AllowAny,
      IsAuthenticated
@@ -57,9 +58,11 @@ class AuthenticationView(APIView):
           
           # deletion of pre-authenticated user
           if(request.user.is_authenticated):
+               print("entered if")
                try:
                     user = request.user
-                    token = Token.objects.get(user = user)
+                    print(user)
+                    token = Token.objects.get(user__username = str(user))
                     token.delete()
                except Exception as e:
                     pass
@@ -70,8 +73,14 @@ class AuthenticationView(APIView):
           
           # response after authnetication
           if(user_authenticated is not None):
-               # generatin authentication token for authentciated user
-               auth_token = Token.objects.create(user = user_authenticated)
+               # generating authentication token for authentciated user
+               try:
+                    auth_token = Token.objects.create(user = user_authenticated)
+               except IntegrityError as e:
+                    # cathing IntegrityError if the token already exists in the database
+                    token = Token.objects.get(user = user_authenticated)
+                    token.delete()
+                    auth_token = Token.objects.create(user = user_authenticated)
                return Response(
                     {
                          "auth_status":"success",
