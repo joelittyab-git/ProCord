@@ -10,7 +10,7 @@ class WebsocketAuthenticationMiddleware(BaseMiddleware):
           self.inner = inner
 
      async def __call__(self, scope, receive, send):
-          # extracting authorization key from request headaer
+          # extracting authorization key from request header
           try:auth_key = str(dict(scope["headers"])[b"authorization"])
           except KeyError:
                scope["user"] = "anonymous"
