@@ -30,7 +30,7 @@ from .serializers import (
           {"status":"success"} -> registration status successfull
           {"status":"exception","info":{...}}} -> database integrity error / other exceptions
           
-**URL["/server/room/register/"](GET) => Gets the registered chat rooms for whcih the user is a part of
+**URL["/server/room/register/"](GET) => Gets the registered chat rooms for which the user is a part of
      :request:{}
      :response:
           {"status":"success", "rooms":[...]} -> rreturns the rooms the user ios a part of
@@ -110,7 +110,7 @@ class RoomRegistrationView(APIView):
 
 '''
 -----------------------------------------------------------------------------------------RegistrationView-View-------------------------------------------------------------------------------------------------
-**URL["/server/room/register/"](POST) => registers the created room and its users to the database
+**URL["/server/room/register/"](GET) => gets the room messages which are stored in the database
      :request:{
           "title":...,
           "description":...,
