@@ -156,9 +156,8 @@ class RegistrationView(APIView):
 
 '''
 -----------------------------------------------------------------------------------------ProfileManager-View-------------------------------------------------------------------------------------------------
-**URL["/server/user/register/"](POST) => edits user profile to the database
-     :request:{"email":..., "first_name":..., "last_name":...,"telephone":...}
-               :file:
+**URL["/server/user/register/"](GET) => gets the user profile data
+     :request:{}
      :response:
           {"status":"success"} -> registration status successfull
           {"status":"exception","info":{...}}} -> database integrity error / other exceptions
@@ -172,13 +171,18 @@ class ProfileManagerView(APIView):
      ]
      
      parser_classes = [
-          JSONParser,
-          FileUploadParser,
           FormParser,
           MultiPartParser
      ]
+     
+     def get(self, request:HttpRequest, *args, **kwargs):
+          # extracting request data
+          user = request.user
+          img_file = request.data.get("img")
           
-     def post(self , requet, *args, **kwargs):
-          pass
+          
+          
+          return Response({"data":{str(request.data)}})
+          
           
      

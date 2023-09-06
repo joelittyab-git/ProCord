@@ -12,5 +12,6 @@ from . import views
 '''
 urlpatterns = [
     path("auth/", views.AuthenticationView.as_view()),
-    path("register/", views.RegistrationView.as_view())   
+    path("register/", views.RegistrationView.as_view()),
+    path("manage/", views.ProfileManagerView.as_view()), 
 ]
