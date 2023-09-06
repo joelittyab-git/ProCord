@@ -16,7 +16,7 @@ class Profile(models.Model):
      )     
      telephone = models.BigIntegerField(default=0)     
      friend_list = models.ManyToManyField("self", through="Friendship")
-     image = models.ImageField(upload_to=profile_picture_media_root, null=True, default=None)
+     image = models.ImageField(upload_to=profile_picture_media_root, null=True, default=None, blank=True)
      is_online = models.BooleanField(default=False)
      
      def __str__(self) -> str:
