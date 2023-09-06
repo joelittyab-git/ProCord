@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('server/user/', include("User.urls")),
     path("server/room/", include("ChatRoom.urls")),
+    path("__tool__/", include("debug_toolbar.urls")),
 ]
 
 
