@@ -12,7 +12,7 @@ from rest_framework.parsers import (
      FormParser,
      MultiPartParser
 )
-                                       
+from .models import Profile
 from django.http import HttpRequest
 from django.contrib.auth import authenticate
 from .validation import (
@@ -25,7 +25,10 @@ from rest_framework import status
 '''
 -----------------------------------------------------------------------------------------Authentication-View-------------------------------------------------------------------------------------------------
 **URL["/server/user/auth/"] => returns the authentication token and credentials if valid 
-     :request:{"username":... , "password":...}(POST)
+     :request:{
+          "username":... ,
+          "password":...
+     }(POST)
      :response:
           {"auth_status":"success","auth_data":{"auth_token":"Token ..."}}} -> authentication status successfull
           {"auth_status":"exception""info":{...}}} -> database integrity error / other exceptions
@@ -54,6 +57,8 @@ class AuthenticationView(APIView):
                          }
                     }
                )
+               
+          print(request)
                
           
           # deletion of pre-authenticated user
@@ -103,7 +108,14 @@ class AuthenticationView(APIView):
 '''
 -----------------------------------------------------------------------------------------RegistrationView-View-------------------------------------------------------------------------------------------------
 **URL["/server/user/register/"] => registers user to the database 
-     :request:{"username":... , "password":..., "email":..., "first_name":..., "last_name":...,"telephone":...,  }(POST)
+     :request:{
+          "username":... ,
+          "password":...,
+          "email":...,
+          "first_name":...,
+          "last_name":...,
+          "telephone":...,  
+     }(POST)
      :response:
           {"status":"success"} -> registration status successfull
           {"status":"exception","info":{...}}} -> database integrity error / other exceptions
@@ -156,8 +168,13 @@ class RegistrationView(APIView):
 
 '''
 -----------------------------------------------------------------------------------------ProfileManager-View-------------------------------------------------------------------------------------------------
-**URL["/server/user/register/"](GET) => gets the user profile data
-     :request:{}
+**URL["/server/user/register/"](POST) => sets the user profile and account data
+     :request:{
+          "img_file":...(File),
+          "first_name":...,
+          "last_name"...,
+          "telephone"...(str)
+     }
      :response:
           {"status":"success"} -> registration status successfull
           {"status":"exception","info":{...}}} -> database integrity error / other exceptions
@@ -175,14 +192,49 @@ class ProfileManagerView(APIView):
           MultiPartParser
      ]
      
-     def get(self, request:HttpRequest, *args, **kwargs):
-          # extracting request data
-          user = request.user
-          img_file = request.data.get("img")
+     def post(self, request:HttpRequest, *args, **kwargs):
+          # extracting request data and files 
+          try:
+               user = request.user
+               img_file = request.FILES.get("profile-img")
+               first_name = request.data.get("first_name")
+               last_name = request.data.get("last_name")
+               telephone = request.data.get("telephone")
+          except Exception as e:
+               return Response({"status":"exception", "info":{str(e)}})
+     
+          user_profile_object = Profile.objects.get(user = user)
+     
+          # editing user data in the database
+          if(
+               not str(first_name).strip() == '' or
+               first_name is not None or
+               str(first_name).str()!=user.first_name
+          ):
+               user.first_name = first_name
+               user.save()
+               
+          if(
+               not str(last_name).strip() == '' or
+               last_name is not None or
+               str(last_name).strip()!=user.last_name
+          ):
+               user.last_name = last_name
+               user.save()
+               
+          if(
+               not str(telephone).strip() == '' or
+               telephone is not None or
+               str(telephone).strip()!=str(user_profile_object.telephone)
+          ):
+               user_profile_object.telephone = int(telephone)
+               user_profile_object.save()
           
           
           
-          return Response({"data":{str(request.data)}})
+          return Response({"data":{str(type(request.FILES.get("img")))}})
           
           
      
+class FriendShipManager(APIView):
+     pass
