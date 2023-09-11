@@ -15,7 +15,8 @@ from pathlib import Path
 # database credentials file
 from __config.credentials import (
     DefaultDatabase,
-    ChannelLayerDatabase
+    ChannelLayerDatabase,
+    Server
 )
 
 from Core.base import BaseConfiguration
@@ -28,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g&xayr$()$e18-jxgr@9m_%b2grgq2j4x46&j#5@7)g0&vyip&'
+SECRET_KEY = Server.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
