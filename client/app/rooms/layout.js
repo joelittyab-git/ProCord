@@ -15,7 +15,7 @@ function layout({children}) {
       <div className='sidebar absolute h-screen items-center'>
         <SideNav/>
       </div>
-      <div className=' ml-14 p-2'>
+      <div className=' ml-14 pl-2'>
             <div className=' bg-white h-screen w-full'>{children}</div>
       </div>
       </div>
