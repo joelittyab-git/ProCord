@@ -4,3 +4,4 @@ server/__config/credentials.py
 **/__pycache__/
 **/__pycache__/
 server/media/
+services/
