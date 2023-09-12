@@ -5,3 +5,4 @@ server/__config/credentials.py
 **/__pycache__/
 server/media/
 services/
+.idea/
