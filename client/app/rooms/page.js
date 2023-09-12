@@ -15,7 +15,7 @@ export default function Room() {
   //         "http://127.0.0.1:8000/server/user/auth/",
   //         {
   //           "username":"admin",
-  //           "password":"Kunnuthara123"
+  //           "password":"Password123"
   //         }
   //       );
   //       console.log(response);
